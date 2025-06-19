@@ -1,6 +1,6 @@
-import {cart} from '../data/cart.js';
+//we can import multiple function or array from single js file with the help of comma
+import {cart , addToCart} from '../data/cart.js';
 import {products} from '../data/products.js';
-
 //we use modules to avoid naming conflicts
 //when we use modules order of scripts doesn't matter we don't need to  put scripts link in proper order
 
@@ -63,40 +63,29 @@ products.forEach((product) => {
 
 console.log(productHTML);
 
+//in the below line we are taking js-product-grid class from html to js and the making it equal to productHTML that is we are making each product grid using this 
 document.querySelector('.js-product-grid')
 .innerHTML=productHTML;
 
+//it is updating the quantity in the cart symbol
+function updateCartQuantity(){
+    let cartQuantity = 0;
+    cart.forEach((cartItem) => {
+        cartQuantity+=cartItem.quantity;
+    });
+
+    document.querySelector('.js-cart-quantity')
+    .innerHTML=cartQuantity;
+}
+
+//calling both functions addToCart and updateCartQuantity and using .js-add-to-cart for each button click one item is getting added 
 document.querySelectorAll('.js-add-to-cart')
     .forEach((button) => {
         button.addEventListener('click',() => {
             const productId = button.dataset.productId;
-
-            let matchingItem;
-            cart.forEach((item) => {
-                if(productId===item.productId){
-                    matchingItem=item;
-                }
-            });
-
-            if(matchingItem){
-                matchingItem.quantity+=1;
-            }else{
-                cart.push({
-                productId:productId,
-                quantity:1
-            });
-            }
             
-            let cartQuantity = 0;
-            cart.forEach((item) => {
-                cartQuantity+=item.quantity;
-            });
-        
-            document.querySelector('.js-cart-quantity')
-            .innerHTML=cartQuantity;
-
-            console.log(cartQuantity);
-            console.log(cart);
+            addToCart(productId);
+            updateCartQuantity();
 
         });
     });
