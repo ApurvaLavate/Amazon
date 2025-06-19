@@ -1,3 +1,9 @@
+import {cart} from '../data/cart.js';
+
+//we use modules to avoid naming conflicts
+//when we use modules order of scripts doesn't matter we don't need to  put scripts link in proper order
+ 
+
 let productHTML = '';
 
 products.forEach((product) => {
@@ -90,6 +96,6 @@ document.querySelectorAll('.js-add-to-cart')
 
             console.log(cartQuantity);
             console.log(cart);
-            
+
         });
     });
