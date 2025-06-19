@@ -1,8 +1,9 @@
 import {cart} from '../data/cart.js';
+import {products} from '../data/products.js';
 
 //we use modules to avoid naming conflicts
 //when we use modules order of scripts doesn't matter we don't need to  put scripts link in proper order
- 
+
 
 let productHTML = '';
 
