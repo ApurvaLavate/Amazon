@@ -1,92 +1,77 @@
-//we can import multiple function or array from single js file with the help of comma
-import {cart , addToCart} from '../data/cart.js';
+import {getCart, addToCart} from '../data/cart.js';
 import {products} from '../data/products.js';
-import { formatCurrency } from './utils/money.js';
-//we use modules to avoid naming conflicts
-//when we use modules order of scripts doesn't matter we don't need to  put scripts link in proper order
+import {formatCurrency} from './utils/money.js';
 
-
-let productHTML = '';
+let productsHTML = '';
 
 products.forEach((product) => {
-    //accumulator method
-        productHTML+=`<div class="product-container">
-            <div class="product-image-container">
-                <img class="product-image"
-                src="${product.image}">
-            </div>
+  productsHTML += `
+    <div class="product-container">
+      <div class="product-image-container">
+        <img class="product-image"
+          src="${product.image}">
+      </div>
 
-            <div class="product-name limit-text-to-2-lines">
-                ${product.name}
-            </div>
+      <div class="product-name limit-text-to-2-lines">
+        ${product.name}
+      </div>
 
-            <div class="product-rating-container">
-                <img class="product-rating-stars"
-                src="images/ratings/rating-${product.rating.stars *10}.png">
-                <div class="product-rating-count link-primary">
-                ${product.rating.count}
-                </div>
-            </div>
+      <div class="product-rating-container">
+        <img class="product-rating-stars"
+          src="images/ratings/rating-${product.rating.stars * 10}.png">
+        <div class="product-rating-count link-primary">
+          ${product.rating.count}
+        </div>
+      </div>
 
-            <div class="product-price">
-                ${formatCurrency(product.priceCents)}
-            </div>
+      <div class="product-price">
+        $${formatCurrency(product.priceCents)}
+      </div>
 
-            <div class="product-quantity-container">
-                <select>
-                <option selected value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                </select>
-            </div>
+      <div class="product-quantity-container">
+        <select>
+          <option selected value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+      </div>
 
-            <div class="product-spacer"></div>
+      <div class="product-spacer"></div>
 
-            <div class="added-to-cart">
-                <img src="images/icons/checkmark.png">
-                Added
-            </div>
+      <div class="added-to-cart">
+        <img src="images/icons/checkmark.png">
+        Added
+      </div>
 
-            <button class="add-to-cart-button button-primary js-add-to-cart"
-              data-product-id="${product.name}">
-                Add to Cart
-            </button>
-            </div>
-    `;
+      <button class="add-to-cart-button button-primary js-add-to-cart"
+      data-product-id="${product.id}">
+        Add to Cart
+      </button>
+    </div>
+  `;
 });
 
-console.log(productHTML);
+document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
-//in the below line we are taking js-product-grid class from html to js and the making it equal to productHTML that is we are making each product grid using this 
-document.querySelector('.js-product-grid')
-.innerHTML=productHTML;
+document.querySelectorAll('.js-add-to-cart').forEach(button => {
+  button.addEventListener('click', () => {
+    const productId = button.dataset.productId;
+    addToCart(productId);
+    updateCartQuantity();
+  });
+});
 
-//it is updating the quantity in the cart symbol
-function updateCartQuantity(){
-    let cartQuantity = 0;
-    cart.forEach((cartItem) => {
-        cartQuantity+=cartItem.quantity;
-    });
-
-    document.querySelector('.js-cart-quantity')
-    .innerHTML=cartQuantity;
+function updateCartQuantity() {
+  const cart = getCart();
+  const quantity = cart.reduce((sum, item) => sum + item.quantity,0);
+  document.querySelector('.js-cart-quantity').innerHTML = quantity;
 }
 
-//calling both functions addToCart and updateCartQuantity and using .js-add-to-cart for each button click one item is getting added 
-document.querySelectorAll('.js-add-to-cart')
-    .forEach((button) => {
-        button.addEventListener('click',() => {
-            const productId = button.dataset.productId;
-            
-            addToCart(productId);
-            updateCartQuantity();
-
-        });
-    });
+updateCartQuantity();
